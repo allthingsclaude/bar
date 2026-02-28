@@ -4,7 +4,7 @@
   "description": "Battery-themed statusline for Claude Code",
   "type": "module",
   "bin": {
-    "bar": "./src/index.js"
+    "claude-bar": "./src/index.js"
   },
   "files": [
     "src/"
