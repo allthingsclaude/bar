@@ -3,7 +3,7 @@
 
 ![Battery](assets/bar.webp)
 
-A battery-themed statusline for Claude Code. Shows context usage, session limits, and git info — right in your terminal.
+A statusline for Claude Code. Shows context usage, session limits, and git info — right in your terminal.
 
 ```
 Opus 4.6 │ 87k/167k [█████░░░░░] 52%
