@@ -3,9 +3,9 @@
 A battery-themed statusline for Claude Code. Shows context usage, session limits, and git info — right in your terminal.
 
 ```
-Claude 3.5 Sonnet | 120k/167k [████████░] 72%
-Session | [██████░░] 65% | 2h 15m
-⌗ main | +24 -8
+Opus 4.6 │ 87k/167k [████░░░░░░] 52%
+Session │ [██░░░░░░░░] 15% │ 4h 31m
+𖠰 status ⎇ feat/status │ +253 -33
 ```
 
 ## Quick start
