@@ -3,6 +3,7 @@ import { join } from 'path';
 import { homedir } from 'os';
 import { BRAND, BRAND_DARK, BRAND_LIGHT, BRAND_LIGHTER, TRACK, DIM, RESET, intensityColor } from './colors.js';
 import { getGitInfo } from './git.js';
+import { getConfig } from './config.js';
 
 const COMPACT_BUFFER = 33_000;
 
@@ -51,6 +52,8 @@ function fmtCountdown(resetsAt) {
  * @param {object|null} usage - { fiveHour: { utilization, resetsAt }, sevenDay } or null
  */
 export function render(input, usage) {
+  const config = getConfig();
+
   // ── Parse input ────────────────────────────────────────────
   const model = input?.model?.display_name || '?';
   const rawCtxSize = input?.context_window?.context_window_size || 200_000;
@@ -115,7 +118,9 @@ export function render(input, usage) {
   }
 
   // ── Output ─────────────────────────────────────────────────
-  let out = line1 + '\n' + line2 + '\n';
-  if (line3) out += line3 + '\n';
+  let out = '';
+  if (config.lines.context) out += line1 + '\n';
+  if (config.lines.session) out += line2 + '\n';
+  if (config.lines.git && line3) out += line3 + '\n';
   process.stdout.write(out);
 }

@@ -8,15 +8,32 @@ Session | [██████░░] 65% | 2h 15m
 ⌗ main | +24 -8
 ```
 
-## Install
+## Quick start
+
+```sh
+npx @allthingsclaude/bar
+```
+
+The interactive setup wizard will:
+
+1. Ask which lines you want visible (context, session, git)
+2. Install `claude-bar` globally
+3. Open your browser to authenticate with your Anthropic account
+4. Configure Claude Code's `statusLine` in `~/.claude/settings.json`
+
+Restart Claude Code and you're done.
+
+## Manual setup
+
+If you prefer to set things up yourself:
+
+### 1. Install
 
 ```sh
 npm i -g @allthingsclaude/bar
 ```
 
-## Setup
-
-### 1. Authenticate
+### 2. Authenticate
 
 ```sh
 claude-bar login
@@ -24,13 +41,16 @@ claude-bar login
 
 Opens your browser to sign in with your Anthropic account (OAuth + PKCE). Tokens are stored securely in `~/.bar/tokens.json`.
 
-### 2. Configure Claude Code
+### 3. Configure Claude Code
 
 Add to your Claude Code settings (`~/.claude/settings.json`):
 
 ```json
 {
-  "statusline": "claude-bar"
+  "statusLine": {
+    "type": "command",
+    "command": "claude-bar"
+  }
 }
 ```
 
@@ -44,11 +64,27 @@ Add to your Claude Code settings (`~/.claude/settings.json`):
 
 Progress bars shift from dim to bright as usage increases.
 
+## Line visibility
+
+The setup wizard saves your preferences to `~/.bar/config.json`. You can also edit it directly:
+
+```json
+{
+  "lines": {
+    "context": true,
+    "session": true,
+    "git": true
+  }
+}
+```
+
+Set any line to `false` to hide it.
+
 ## Commands
 
 | Command | Description |
 |---------|-------------|
-| `claude-bar` | Render statusline (reads from stdin) |
+| `npx @allthingsclaude/bar` | Run interactive setup wizard |
 | `claude-bar login` | Authenticate via OAuth |
 | `claude-bar logout` | Remove stored token |
 
