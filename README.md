@@ -1,4 +1,7 @@
-# bar
+# Bar
+> by All Things Claude
+
+![Battery](assets/bar.webp)
 
 A battery-themed statusline for Claude Code. Shows context usage, session limits, and git info — right in your terminal.
 
