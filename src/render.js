@@ -38,12 +38,22 @@ function progressBar(pct, intensity) {
   return bar + RESET;
 }
 
+function shortDuration(seconds) {
+  if (seconds <= 0) return '0s';
+  const total = Math.floor(seconds);
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = total % 60;
+  if (h > 0) return `${h}h ${m}m`;
+  if (m > 0) return `${m}m`;
+  if (s > 0) return `${s}s`;
+  return '< 1m';
+}
+
 function fmtCountdown(resetsAt) {
-  if (!resetsAt) return '--';
-  const remain = Math.max(0, Math.floor((new Date(resetsAt) - Date.now()) / 1000));
-  const h = Math.floor(remain / 3600);
-  const m = Math.floor((remain % 3600) / 60);
-  return `${h}h ${m}m`;
+  if (!resetsAt) return null;
+  const remain = (new Date(resetsAt) - Date.now()) / 1000;
+  return shortDuration(remain);
 }
 
 /**
@@ -76,28 +86,16 @@ export function render(input, usage) {
   const line1 = `${BRAND}${model}${RESET}${SEP}${DIM}${usedFmt}/${totalFmt}${RESET} [${bar1}] ${ctxIntensity}${pct}%${RESET}`;
 
   // ── LINE 2: Session / Usage ────────────────────────────────
-  let sessionPct, sessionLabel, sessionCountdown;
-
+  let line2;
   if (usage?.fiveHour) {
-    sessionPct = Math.round(usage.fiveHour.utilization);
-    sessionLabel = `${sessionPct}%`;
-    sessionCountdown = fmtCountdown(usage.fiveHour.resetsAt);
+    const sessionPct = Math.round(usage.fiveHour.utilization);
+    const sIntensity = intensityColor(sessionPct);
+    const bar2 = progressBar(sessionPct, sIntensity);
+    const countdown = fmtCountdown(usage.fiveHour.resetsAt) || '--';
+    line2 = `${BRAND}Session${RESET}${SEP}[${bar2}] ${sIntensity}${sessionPct}%${RESET}${SEP}${DIM}${countdown}${RESET}`;
   } else {
-    // Fallback: use duration_ms / 5h
-    const durationMs = input?.cost?.total_duration_ms || 0;
-    const sessionWindow = 18000; // 5h in seconds
-    const dSec = Math.floor(durationMs / 1000);
-    sessionPct = Math.min(100, Math.floor(dSec * 100 / sessionWindow));
-    const remain = Math.max(0, sessionWindow - dSec);
-    const rh = Math.floor(remain / 3600);
-    const rm = Math.floor((remain % 3600) / 60);
-    sessionLabel = `${sessionPct}%`;
-    sessionCountdown = `${rh}h ${rm}m`;
+    line2 = `${BRAND}Session${RESET}${SEP}${DIM}No active session${RESET}`;
   }
-
-  const sIntensity = intensityColor(sessionPct);
-  const bar2 = progressBar(sessionPct, sIntensity);
-  const line2 = `${BRAND}Session${RESET}${SEP}[${bar2}] ${sIntensity}${sessionLabel}${RESET}${SEP}${DIM}${sessionCountdown}${RESET}`;
 
   // ── LINE 3: Git ────────────────────────────────────────────
   const cwd = input?.workspace?.current_dir || '.';

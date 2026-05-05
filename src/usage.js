@@ -69,18 +69,22 @@ export async function getUsage() {
 
   try {
     const json = JSON.parse(res.body);
-    const fiveRaw = json.five_hour?.utilization ?? 0;
-    const sevenRaw = json.seven_day?.utilization ?? 0;
-    // API returns utilization as percentage (e.g. 23.5 = 23.5%)
+    // API returns utilization as percentage (e.g. 23.5 = 23.5%).
+    // Store raw Doubles; round only at display time. fiveHour is null when
+    // there is no active 5-hour session window.
     const data = {
-      fiveHour: {
-        utilization: Math.round(fiveRaw),
-        resetsAt: json.five_hour?.resets_at || null,
-      },
-      sevenDay: {
-        utilization: Math.round(sevenRaw),
-        resetsAt: json.seven_day?.resets_at || null,
-      },
+      fiveHour: json.five_hour
+        ? {
+            utilization: json.five_hour.utilization ?? 0,
+            resetsAt: json.five_hour.resets_at || null,
+          }
+        : null,
+      sevenDay: json.seven_day
+        ? {
+            utilization: json.seven_day.utilization ?? 0,
+            resetsAt: json.seven_day.resets_at || null,
+          }
+        : null,
     };
     writeCache(data);
     return data;

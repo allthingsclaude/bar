@@ -55,9 +55,11 @@ export default async function setup() {
     console.error(`\n  ${BRAND}Warning:${RESET} Global install failed. You may need to run with sudo or fix npm permissions.`);
   }
 
-  // OAuth login
-  console.log(`\n  ${BRAND}Authenticating with Claude...${RESET}\n`);
-  await login();
+  // OAuth login (only needed for session/rate-limit data)
+  if (config.lines.session) {
+    console.log(`\n  ${BRAND}Authenticating with Claude...${RESET}\n`);
+    await login();
+  }
 
   // Write statusLine config to ~/.claude/settings.json
   writeStatusLineConfig();
